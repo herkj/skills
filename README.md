@@ -1,54 +1,71 @@
-# Aidn product skills
+# Aidn skills
 
-Two reusable Agent Skills for Aidn product and design work. The repository is also a Cowork/Claude
-Code plugin, so the skills and the Aidn Design System connector can be installed together.
+Three Agent Skills for Aidn product and design work. They are intended for Aidn colleagues using
+Claude, Cowork, or Codex, while keeping credentials and machine-specific configuration outside the
+repository.
 
-## Included skills
+## Install with an agent
 
-| Skill | What it does | Required dependencies |
+Tell Claude or Codex:
+
+> Install the skills from https://github.com/herkj/skills
+
+The agent should first show the available skills, let you choose, install only those choices, and
+then run each selected skill's own setup. The complete agent-facing flow is in
+[`INSTALL.md`](INSTALL.md).
+
+| Skill | What it does | Core requirement |
 | --- | --- | --- |
-| [`design-audit`](skills/design-audit/) | Audits an Aidn Figma design or UI implementation against the live Aidn Design System. | Authenticated Aidn Design System connector, included in the plugin. |
-| [`shape`](skills/shape/) | Shapes Aidn product or design ideas into evidence-grounded Shape Up pitches and appropriately sized research plans. | None. An attached workspace and Slack, Notion, or Productboard access improve the result but are optional. |
+| [`shape`](skills/shape/) | Shapes an Aidn product or design idea into an evidence-grounded Shape Up pitch. | None. Existing workspaces and evidence connectors are optional. |
+| [`design-audit`](skills/design-audit/) | Audits Figma designs or coded UI against the live Aidn Design System. | Authenticated Aidn Design System connection. |
+| [`ads`](skills/ads/) | Creates Aidn UI in Figma or Paper using ADS foundations and published components. | The output tool requested by the user; live Design System access is recommended. |
 
-Neither skill depends on the local `ADS` skill. `design-audit` may use ADS or other design-review
-skills when present, but they are optional references rather than requirements.
+ADS is an optional companion to Design Audit. It adds Aidn layout patterns, color-role guidance,
+asset rules, and Figma-library context. It does not replace the live Design System evidence required
+for a conformance finding.
 
-## Install in Claude Cowork
+## Setup and access policy
 
-1. Download [`packages/aidn-product-skills.plugin`](packages/aidn-product-skills.plugin).
-2. In Cowork, open **Customize → Plugins** and upload the file.
-3. Authenticate the Aidn Design System connector when prompted.
-4. Enable `shape` and `design-audit` in the plugin.
+Each skill owns its setup guide:
 
-The Design System server is remote and uses OAuth; no credentials are stored in this repository.
-Direct Figma inspection additionally requires the user's Figma connector. Without Figma, the audit
-can still work from screenshots, descriptions, or source code and will label the result partial.
+- [`shape` setup](skills/shape/references/setup.md)
+- [`design-audit` setup](skills/design-audit/references/setup.md)
+- [`ads` setup](skills/ads/references/setup.md)
 
-## Install an individual skill
+The skills reuse connectors and plugins already approved in Claude or Codex. Installation does not
+add an MCP server, start OAuth, install fonts, or request access to a data source. If a workflow
+would benefit from missing access, the skill asks at that point. Declining optional access leaves
+the skill usable in its documented limited mode.
 
-Each skill is self-contained in `skills/<skill-name>/`. Copy the entire selected folder into the
-personal skills directory supported by the client. For Claude Code that is
-`~/.claude/skills/<skill-name>/`; restart only if the top-level skills directory did not previously
-exist.
+Design Audit is the exception for core conformance: without the Aidn Design System service it cannot
+make Design System findings and reports itself blocked instead of guessing.
 
-Cowork users who do not want the combined plugin can ZIP one skill folder so the ZIP contains the
-skill directory at its root, then upload it through **Customize → Skills**. The combined plugin is
-recommended for `design-audit` because it also supplies the connector configuration.
+## Manual installation
 
-## Portability behavior
+Each skill is self-contained in `skills/<skill-name>/`. Copy the entire selected folder—including
+`references/`—into the personal skills directory supported by the client.
 
-- `shape` first uses a user-provided or attached Aidn vault. If none is available, it offers to
-  save under the current writable workspace or complete the pitch in chat.
-- Slack, Notion, Productboard, Amplitude, and other evidence sources are optional. Missing access is
-  recorded as unknown evidence rather than replaced with guesses.
-- `design-audit` requires the five baseline Design System capabilities documented in its skill. It
-  stops cleanly when the connector cannot provide them.
-- This is a private repository. GitHub users need explicit repository access to download the source
-  or packaged plugin.
+- Codex: use its built-in skill installer, or install under `$CODEX_HOME/skills/` (normally
+  `~/.codex/skills/`).
+- Claude Code: install under `~/.claude/skills/`.
+- Cowork: upload the selected skill through **Customize → Skills**, or upload the combined plugin
+  from [`packages/aidn-product-skills.plugin`](packages/aidn-product-skills.plugin).
+
+The combined plugin contains all three skills but deliberately contains no credentials or automatic
+connector configuration. Run the setup for the skill you plan to use.
+
+## Security and privacy
+
+- No OAuth tokens, API keys, passwords, session cookies, or private workspace data belong in this
+  repository.
+- Authentication uses the host application's native flow after explicit user approval.
+- Figma component/style identifiers in ADS are references, not credentials; Figma still enforces the
+  signed-in user's library permissions.
+- A private repository requires GitHub access. If this repository becomes public, anyone can read
+  the skill instructions, but they do not gain access to Aidn services or Figma libraries.
 
 ## Updating
 
-The repository is the distributed source. After changing a skill, rebuild the plugin package and
-re-upload it in Cowork. Run `bash scripts/package-plugin.sh` from the repository to rebuild
-`packages/aidn-product-skills.plugin`. Locally uploaded Cowork plugins do not update automatically
-from GitHub.
+The repository is the distributed source. After changing a skill, rebuild the plugin with
+`bash scripts/package-plugin.sh` and re-upload it in Cowork. Locally uploaded Cowork plugins do not
+update automatically from GitHub.

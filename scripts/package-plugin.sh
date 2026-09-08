@@ -13,8 +13,8 @@ mkdir -p "$PACKAGE_DIR"
   cd "$REPO_ROOT"
   zip -X -FS -r "$PACKAGE_PATH" \
     .claude-plugin \
-    .mcp.json \
     skills \
+    INSTALL.md \
     README.md \
     -x '*.DS_Store'
 )

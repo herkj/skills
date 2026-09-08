@@ -23,6 +23,12 @@ The output is a **Shape Up pitch**, not a spec. Problem, appetite, a fat-marker 
 sketch, rabbit holes, no-gos. Plus two things Shape Up does not have and designers need: a
 **confidence ledger** and a **research plan sized to the appetite**.
 
+## First-run setup
+
+After installation, read and follow [`references/setup.md`](references/setup.md). Reuse the
+connectors and permissions already approved in Claude, Cowork, or Codex. Do not create a connector
+or start authorization during installation. Missing evidence access never blocks Shape.
+
 ---
 
 ## The two rules that make this work
@@ -130,7 +136,10 @@ Once resolved:
 Never assume another user's home directory or silently create a new vault. If a vault is not
 readable, say so in one line and mark vault-sourced claims `[unknown]` rather than inventing
 them. Slack, Notion, Productboard, and other connectors are optional; try an available
-connector before declaring it unavailable, then treat missing access as missing evidence.
+connector before declaring it unavailable, then treat missing access as missing evidence. When a
+missing source would materially improve the current decision, ask whether to authorize it or
+continue with `[unknown]`. If the user declines, continue without it. Never request credentials in
+chat or add a connector without permission.
 
 ## Before you start
 

@@ -19,6 +19,12 @@ tokens/components) — this skill sits alongside those and cites the actual DS i
 practices in the abstract. If asked to just "review this design" with no DS angle, prefer
 `design-critique`.
 
+## First-run setup
+
+After installation, read and follow [`references/setup.md`](references/setup.md). Reuse any working
+Aidn Design System and Figma connections already approved in Claude, Cowork, or Codex. Do not add a
+connector or start OAuth without the user's permission.
+
 ## Operating Posture
 
 You are auditing against a real, queryable system, not offering an opinion. Default to flagging —
@@ -48,8 +54,13 @@ one of the five baseline tools is unavailable, state which capability is missing
 conformance audit is not possible.
 
 Figma access is required only for direct inspection of Figma nodes. Without it, work from supplied
-screenshots or descriptions and label the design-side audit partial. `aidn-design`, `ADS`,
+screenshots or descriptions and label the design-side audit partial. `aidn-design`, `ads`,
 `design-critique`, and `accessibility-review` are optional reference skills, not dependencies.
+
+When the `ads` skill is installed, use its layout, color-role, asset, and Figma-library references
+as leads during recon and judgment. They improve Aidn context but are versioned snapshots, not live
+conformance evidence. Re-check any token, component, or guideline claim with the Design System MCP
+before putting it in the findings table.
 
 ## Why this is different from a generic design critique
 
