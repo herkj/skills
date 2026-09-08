@@ -105,31 +105,43 @@ A round looks like this:
 
 ---
 
-## Where things live
+## Runtime dependencies and workspace
 
-This skill runs in Cowork, Claude Code and Codex. Paths are absolute so they resolve
-regardless of the working directory.
+This skill runs in Cowork, Claude Code, Codex, and other clients that support Agent Skills.
+It has no hard dependency on another skill, ADS, a particular vault, or a connector. A
+writable workspace is optional: when none is available, complete the session in chat.
 
-- Vault root: `/Users/henrik/Documents/Vaults/Henriks Vault`
-- Process memory: `<vault>/Aidn/Shaping learnings.md`
-- Existing shaping docs: `<vault>/Aidn/initiatives/`
-- Output: `<vault>/Aidn/initiatives/<Name> - shaping.md`
-- Canonical copy of this skill: `<vault>/_System/skills/shape/SKILL.md`
+Resolve the workspace before Phase 0:
 
-If the vault is not readable from the current environment, say so in one line and run the
-session anyway, marking every vault-sourced claim `[unknown]` rather than inventing one.
-Connectors (Slack, Notion, Productboard) may be absent in some environments; a missing
-connector is missing evidence, not permission to guess.
+1. Use a path or selected folder the user explicitly supplied.
+2. Otherwise, inspect accessible workspace roots for either `Aidn/Shaping learnings.md` or
+   `Aidn/initiatives/`. If exactly one root contains them, treat that root as `<vault>`.
+3. If no Aidn vault is accessible, propose one forced choice: save to
+   `<workspace>/shaping/<Name> - shaping.md` in the current writable workspace, or keep the
+   pitch in chat. Recommend the workspace file when one is writable; otherwise recommend chat.
+
+Once resolved:
+
+- Vault process memory: `<vault>/Aidn/Shaping learnings.md`
+- Existing vault shaping docs: `<vault>/Aidn/initiatives/`
+- Vault output: `<vault>/Aidn/initiatives/<Name> - shaping.md`
+- Generic workspace output: `<workspace>/shaping/<Name> - shaping.md`
+
+Never assume another user's home directory or silently create a new vault. If a vault is not
+readable, say so in one line and mark vault-sourced claims `[unknown]` rather than inventing
+them. Slack, Notion, Productboard, and other connectors are optional; try an available
+connector before declaring it unavailable, then treat missing access as missing evidence.
 
 ## Before you start
 
-Read `<vault>/Aidn/Shaping learnings.md`. That file is this skill's memory: sources it
-failed to check, questions it failed to ask, priors it got wrong. It is process memory, not
-domain facts, so reading it first does not contaminate the cold read. Apply its standing
-corrections.
+In vault mode, read `<vault>/Aidn/Shaping learnings.md` when it exists. That file is this
+skill's memory: sources it failed to check, questions it failed to ask, priors it got wrong.
+It is process memory, not domain facts, so reading it first does not contaminate the cold
+read. Apply its standing corrections. A missing memory file is not an error.
 
 If a shaping doc already exists for this topic in `<vault>/Aidn/initiatives/`, read it and
-continue rather than starting from zero. If the user gave no topic, ask for one in one line.
+continue rather than starting from zero. In workspace or chat mode, search only the accessible
+workspace for an existing shaping document. If the user gave no topic, ask for one in one line.
 
 ---
 
@@ -252,8 +264,11 @@ Write the file. Then run the feedback loop. Then stop.
 
 ## Output
 
-Write to `Aidn/initiatives/<Name> - shaping.md` with the vault's frontmatter schema
-(`type`, `topic`, `tags`, `summary`, `source`, `created`, `last_updated`).
+Write to the resolved output target. In vault mode, use
+`<vault>/Aidn/initiatives/<Name> - shaping.md`; in generic workspace mode, use
+`<workspace>/shaping/<Name> - shaping.md`; in chat mode, return the complete pitch in the
+conversation. For file output, use the frontmatter schema (`type`, `topic`, `tags`, `summary`,
+`source`, `created`, `last_updated`).
 
 ```markdown
 # Shaping: <name>
@@ -388,19 +403,19 @@ The most valuable moment is when the user redirects you: corrects a fact, suppli
 you did not check, or rejects an answer for a reason you could not have guessed. Catch it
 in the moment.
 
-At the end, propose appends to `Aidn/Shaping learnings.md`, in three kinds:
+At the end, propose appends to the process-memory file when vault mode is active, in three kinds:
 
 - **Source I should have checked** goes to the Phase 2 retrieval list
 - **Question I should have asked** goes to the challenge bank
 - **Wrong prior** becomes a standing correction
 
-Show the lines, get an OK, keep each to one dated line. Create the file with vault
-frontmatter if missing. Past roughly 30 entries, offer to promote the recurring ones into
-this skill, which is how it improves.
+Show the lines and get an OK before writing them. Keep each to one dated line. If no process
+memory is available, show the proposed lines and say they were not persisted. Past roughly
+30 entries, offer to promote recurring lessons into the skill, which is how it improves.
 
-When a change to the skill itself is agreed, edit the canonical copy at
-`<vault>/_System/skills/shape/SKILL.md` and remind the user to run
-`<vault>/_System/skills/sync-skills.sh` so Claude Code and Codex pick it up.
+When a change to the skill itself is agreed, update the installed or source-controlled copy
+available in the current environment. Tell the user to refresh the skill using their normal
+installation method; never assume a machine-specific canonical path or sync script.
 
 ---
 

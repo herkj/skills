@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "aidn-design-system": {
+      "type": "http",
+      "url": "https://designsystem.aidn.no/mcp"
+    }
+  }
+}

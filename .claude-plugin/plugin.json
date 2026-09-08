@@ -1,0 +1,13 @@
+{
+  "name": "aidn-product-skills",
+  "version": "0.1.0",
+  "description": "Shape Aidn product ideas and audit interfaces against the live Aidn Design System.",
+  "author": {
+    "name": "Henrik"
+  },
+  "homepage": "https://github.com/herkj/skills",
+  "repository": "https://github.com/herkj/skills",
+  "license": "UNLICENSED",
+  "keywords": ["aidn", "product", "shape-up", "design-system", "design-audit"],
+  "mcpServers": "./.mcp.json"
+}
